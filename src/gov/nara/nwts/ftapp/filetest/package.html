@@ -1,0 +1,26 @@
+<html>
+<body>
+<p>This package contains the File Test rules/recipes that will be presented as options to a user.</p>
+<p>{@linkplain gov.nara.nwts.ftapp.filter.FileTestFilter} – options that will be presented to a user in order to select files for analysis.  The order in which the filters are presented will determine the default filter to be presented to a user.  If unspecified, all files will be accepted by a FileTest. Filters are designed to be editable in the user interface.  Each File Test can implement a {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#isTestable(java.io.File) method} to further qualify files for analysis.  </p>
+<p>{@linkplain gov.nara.nwts.ftapp.ftprop.FTProp} – optional properties can be defined for a FileTest.  The behavior of the FileTest analysis will be determined by the property values that are passed to the FileTest.</p>
+<p>{@linkplain gov.nara.nwts.ftapp.stats.Stats} – the object to which analysis results will be saved.  A stats object may be created for each file analyzed or for the aggregate of a group of files.  The {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#getKey(java.io.File)} method will determine how the aggregation will occur.</p>
+<h2>File Test Process</h2>
+<ul><li>Call {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#init()}</li>
+<li>Begin file traversal</li>
+<li>
+<ul>
+<li>If {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#processRoot()} then process the root directory passed to the File Test
+</li>Traverse the directory tree
+<li>If {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#isTestDirectory()} then process directories that match {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#getDirectoryPattern()}</li>
+<li>If {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#isTestFiles()} then iterate over the files that match the specified filter pattern</li>
+<li>Confirm that a given file qualifies, call {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#isTestable(java.io.File)}</li>
+<li>If a file qualifies, call {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#getKey(java.io.File)} to get the key associated with the file}</li>
+<li>{@linkplain gov.nara.nwts.ftapp.filetest.FileTest#createStats(java.lang.String)} Retrieve a Stats object associated with the key</li>
+<li>Test the file {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#fileTest(java.io.File)} and optionally save the results to the Stats object</li>
+</ul>
+</li>
+<li>Call {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#refineResults()}</li>
+<li>{@linkplain gov.nara.nwts.ftapp.filetest.FileTest#getShortName()} and {@linkplain gov.nara.nwts.ftapp.filetest.FileTest#getStatsDetails()} will be invoked to present the resulting Stats</li>
+</ul>
+</body>
+</html>
