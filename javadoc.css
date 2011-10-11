@@ -1,0 +1,19 @@
+table.bordered {
+ border-collapse: collapse;
+}
+table.bordered td, table.bordered th {
+  border: solid thin black;
+  padding: 2px;
+}
+
+table.overview td, table.overview th {
+	width: 140px;
+}
+
+tr.custom {
+	background-color: #EEFFFF;
+}
+
+tr.img {
+	background-color: #FFEEFF;
+}

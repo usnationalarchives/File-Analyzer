@@ -1,0 +1,67 @@
+<html>
+<head>
+	<link href="../javadoc.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+<p>The NARA File Analyzer Tool is a multi-purpose QC application built by NARA's Digitization Services Team -- the application will walk a directory tree and will compute statistics about each file that it encounteres.</p>
+<h2>DESCRIPTION</h2>
+<p>The NARA File Analyzer Tool walks a directory tree and performs a "File Test" on each file that is encountered.  The application framework allows new File Tests to be quickly developed and deployed into the application.  The results of each File Test are compiled into a table that summarizes the results of the analysis.</p>
+<p>A File Test is a simple set of actions that are performed upon a single file such as filename validation, file size statistical analysis, checksum calculation, file type extraction.  Depending on the action, the content of the file may or may not be read.  Each File Test is configured with filters that determine which files will be processed by the File Test (i.e. only image files).</p>
+<p>Each File Test will generate a table of results.  The number of columns and the definition of the columns will vary from test to test.  For example, a file type analysis will report the file extension and the number of files discovered with that extension.  The checksum file tests will report the name of a file and the checksum string associated with that file.</p>
+<p>The File Analyzer tool can be run as a GUI in which the results are displayed in a table. The File Analyzer can also be run in batch mode.  In batch mode, the results will be written to a tab-separated file.  The GUI version of the application allows the results of multiple executions to be merged.  The merged information can be filtered to display matching values and mismatched values.</p>
+<h2>BENEFITS</h2> 
+<p>The NARA File Analyzer automates a number of simple tasks that would be tedious to perform either manually or with other COTS applications.</p> 
+<p>The match/merge capabilities have provided a very powerful and simple mechanism to ensure quality control checks on large numbers of files.  </p>
+<p>Note: NARA has also deployed a customized version of this application that performs file tests that implement custom business rules such as file name validation and metadata introspection.</p>  
+<h2>Overview</h2>
+<table class="bordered overview">
+	<tbody>
+		<tr>
+			<th>Application Version</th>
+			<th>Description</th>
+			<th>Input</th>
+			<th>Processing Rule</th>
+			<th>Ouput</th>
+			<th>Match/merge</th>
+		</tr>
+		<tr>
+			<th>{@linkplain gov.nara.nwts.ftapp.FileAnalyzer}</th>
+			<td>GUI interface for analyzing files</td>
+			<td rowspan="2">Input Directory containing files to analyze</td>
+			<td rowspan="2">{@linkplain gov.nara.nwts.ftapp.filetest.FileTest} - how to analyze the files</td>
+			<td rowspan="4">{@linkplain gov.nara.nwts.ftapp.stats.Stats} - results of the analysis</td>
+			<td rowspan="4">Once 2 or more file analyzer stats have been created, they can be merged for comparison purposes</td>
+		</tr>
+		<tr>
+			<th>{@linkplain gov.nara.nwts.ftapp.BatchAnalyzer}</th>
+			<td>Command-line interface to initiate a file analysis</td>
+		</tr>
+		<tr>
+			<th>{@linkplain gov.nara.nwts.ftapp.FileAnalyzer File Analyzer (Import Tab)}</th>
+			<td>GUI interface for parsing importing files</td>
+			<td rowspan="2">Input file to parse</td>
+			<td rowspan="2">{@linkplain gov.nara.nwts.ftapp.importer.Importer} - determines how to parse and import the file</td>
+		</tr>
+		<tr>
+			<th><a href="gov/nara/nwts/ftapp/BatchImporter.html">Batch Importer</a></th>
+			<td>Command-line interface for parsing importing files</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Using the Application</h2>
+<p>After starting the application, the user will be presented with a screen in which the following information will be requested.</p>
+<ul>
+<li>The input directory to analyze</li>
+<li>The output directory in which to save results (optional)</li>
+<li>The File Test to apply to the input files</li>
+<li>The maximum number of files to process</li>
+<li>Filter criteria for selecting the files to process (the filters that appear depend on the selected File Test)</li>
+<li>Custom properties for the chosen file test (where applicable)</li>
+</ul>
+<h2>User Guide</h2>
+<p>A brief <a href="../../../fileAnalyzer/doc/NARA%20File%20Analyzer%20and%20Metadata%20Harvester.doc">user guide</a> demonstrates the use of the application.</p>
+<h2>Code notes</h2>
+<p>The class hierarchies that are in place have worked very well and have allowed the application to solve a variety of different problems.  Many base classes exist and can be subclassed to solve project-specific problems.</p>
+<p>Class, member and function visibility is not terribly consistent within the application.  If the application is to be refactored, this is an area where some time should be spent.</p>
+<p>The original version of the application was a GUI.  The command-line interface for the application was added after the fact by extracting many core features into {@linkplain gov.nara.nwts.ftapp.FTDriver}.  The code can get a little messy when distinguish code GUI features {@linkplain gov.nara.nwts.ftapp.gui.DirectoryTable} and core command-line features.</p>
+</body></html>
