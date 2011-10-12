@@ -14,6 +14,125 @@ import gov.nara.nwts.ftapp.stats.NameValidationStats;
 import gov.nara.nwts.ftapp.stats.Stats;
 /**
  * Abstract class defining the core functionality of a filename validation rule.
+ * 
+ * <h3>Sample Usage applying a complex set of patterns:</h3>
+ * <pre>
+ * class CustomFilenameTest extends NameValidationTest {
+ * public static String fold = "(\\d\\d\\d\\d[A-Z]?)";
+ * public static String fold2 = "\\\\" + fold + "\\\\";
+ * public static String box = "\\d\\d\\d\\d?[A-Z]?";
+ * public static String box2 = "^.*\\\\Box(" + box + ")";
+ * public static String box3 = "^(.*)\\\\Box(\\d\\d\\d\\d?[A-Za-z]?)";
+ * public static String suff = "(001|002)_(MA|AC).tif$";
+ * public static String seqsuff = "(\\d\\d\\d)_" + suff;
+ * 
+ * Pattern dirPatternFolder;
+ * Pattern dirPatternImage;
+ * Pattern dirPatternIgnore;
+ * Pattern dirPatternIgnoreR;
+ * 
+ * public CustomFilenameTest(FTDriver dt, FileTest next) {
+ * 		super(dt, new ValidPattern(box2 + fold2 + "Box\\1_" + seqsuff, true),
+ * 			next, "Forest Service Filename", "RG95 ");
+ * 		seqs = new TreeMap<String, Integer>();
+ * 		dirseqs = new TreeMap<File, Integer>();
+ * 
+ * 		dirPatternFolder = Pattern.compile("^(\\d\\d\\d\\d)[A-Z]?$");
+ * 		dirPatternImage = Pattern.compile("^Box"+box+"_" + seqsuff);
+ * 		dirPatternIgnore = Pattern.compile("^(\\..*|Thumbs.db)$");
+ * 		dirPatternIgnoreR = Pattern
+ * 				.compile("^(\\..*|Thumbs.db|\\d\\d\\d\\d[A-Z]?)$");
+ * 
+ * 		testPatterns.add(new InvalidManualPattern(box2 + fold2
+ * 				+ "Box(\\d\\d\\d[A-Z]?)_" + seqsuff, true) {
+ * 			public String getMessage(File f, Matcher m) {
+ * 				return "Box number mismatch in filename: [" + m.group(1) + "/"
+ * 						+ m.group(3) + "]";
+ * 			}
+ * 		});
+ * 		testPatterns.add(new InvalidManualPattern("^.*\\\\(Box" + box
+ * 				+ "[^\\\\]+)" + fold2 + "Box(" + box + ")" + seqsuff, true) {
+ * 			public String getMessage(File f, Matcher m) {
+ * 				return "Box folder name is invalid: [" + m.group(1) + "]";
+ * 			}
+ * 		});
+ * 		testPatterns.add(new InvalidManualPattern("(" + box3 + "\\\\"
+ * 				+ "\\d{6,6}_.*_(\\d\\d\\d))_(MA|AC).tif$", true) {
+ * 			public String getMessage(File f, Matcher m) {
+ * 				return "No FOLDER folder present";
+ * 			}
+ * 		});
+ * 		testPatterns.add(new RenameablePattern("^.*\\\\\\s*(Box" + box
+ * 				+ ")[\\-_](\\d\\d\\d)[\\-_](001|002)[\\-_]*(MA|AC)\\s*.tif$",
+ * 				true) {
+ * 			public String getMessage(File f, Matcher m) {
+ * 				return "Separators replaced";
+ * 			} 
+ * 
+ * 			public File getNewFile(File f, Matcher m) {
+ * 				String newname = m.group(1) + "_" + m.group(2) + "_"
+ * 						+ m.group(3) + "_" + m.group(4) + ".tif";
+ * 				return new File(f.getParentFile(), newname);
+ * 			}
+ * 		});
+ * 		testPatterns.add(new RenameablePattern(box2 + fold2
+ * 				+ "(Box\\1)_\\d{5,5}_" + seqsuff, true) {
+ * 			public String getMessage(File f, Matcher m) {
+ * 				return "Subject code removed";
+ * 			} 
+ * 
+ * 			public File getNewFile(File f, Matcher m) {
+ * 				String newname = m.group(3) + "_" + m.group(4) + "_"
+ * 						+ m.group(5) + "_" + m.group(6) + ".tif";
+ * 				return new File(f.getParentFile(), newname);
+ * 			}
+ * 		});
+ * 		testPatterns.add(new RenameablePattern(box3 + fold2 + "Box\\d{1,3}_"
+ * 				+ seqsuff, true) {
+ * 			public String getMessage(File f, Matcher m) {
+ * 				return "Extraneous identifiers removed";
+ * 			}
+ * 
+ * 			public File getNewFile(File f, Matcher m) {
+ * 				String mbox = "Box" + m.group(2).toUpperCase();
+ * 				String newname = m.group(1) + "\\" + mbox + "\\" + m.group(3)
+ * 						+ "\\" + mbox + "_" + m.group(4) + "_" + m.group(5)
+ * 						+ "_" + m.group(6) + ".tif";
+ * 				return new File(CustomFilenameTest.this.dt.root, newname);
+ * 			}
+ * 		});
+ * 		testPatterns.add(new RenameablePattern("("+box3 + fold2 + "\\d{6,6}[a-zA-Z]?_.*_)(\\d\\d\\d)_(MA|AC).tif$", true) {
+ * 			String message = "Sequence number generated";
+ * 			public String getMessage(File f, Matcher m) {
+ * 				return message;
+ * 			}
+ * 
+ * 			
+ * 			public File getNewFile(File f, Matcher m) {
+ * 			   ... custom logic to introspect the file system and determine the next sequence number to assign.
+ * 			}
+ * 		});
+ * 
+ * 
+ * 		dirTestPatterns.add(new CustomPattern("^Box\\d\\d\\d[A-Z]?$", false) {
+ * 			public RenameDetails report(File f, Matcher m) {
+ * 				RenameDetails det = DirAnalysis.analyze(f, dirPatternFolder, 1,
+ * 						dirPatternIgnore, false);
+ * 				if (det.status == RenameStatus.DIRECTORY_VALID) {
+ * 					det = DirAnalysis.recursiveAnalyze(f, dirPatternImage, 1,
+ * 							dirPatternIgnoreR, false);
+ * 				}
+ * 				return det;
+ * 			}
+ * 		});
+ * 		dirTestPatterns.add(new CustomPattern(dirPatternFolder, false) {
+ * 			public RenameDetails report(File f, Matcher m) {
+ * 				return DirAnalysis.analyze(f, dirPatternImage, 1,
+ * 						dirPatternIgnore, false);
+ * 			}
+ * 		});
+ * 	}
+ * </pre>
  * @author TBrady
  *
  */
