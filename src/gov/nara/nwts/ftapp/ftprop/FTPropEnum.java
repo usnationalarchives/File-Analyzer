@@ -18,7 +18,7 @@ public class FTPropEnum extends DefaultFTProp {
 	JComboBox combo;
 
 	public FTPropEnum(FileTest ft, String name, String shortname, String description, Object[]vals, Object def) {
-		super(ft, shortname, name, description, def);
+		super(ft, name, shortname, description, def);
 		init(vals);
 		combo = new JComboBox();
 		initCombo(vals);

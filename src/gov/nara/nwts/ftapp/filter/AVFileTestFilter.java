@@ -8,7 +8,7 @@ package gov.nara.nwts.ftapp.filter;
 public class AVFileTestFilter extends DefaultFileTestFilter {
 
 	public String getSuffix() {
-		return ".*\\.(\\.wav|\\.mov|\\.mp3|\\.avi|\\.dpx|\\.mxf)$";
+		return ".*(\\.wav|\\.mov|\\.mp3|\\.avi|\\.dpx|\\.mxf)$";
 	}
 	public boolean isReSuffix() {
 		return true;

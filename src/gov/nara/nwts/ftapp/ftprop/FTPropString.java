@@ -16,7 +16,7 @@ import javax.swing.event.DocumentListener;
 public class FTPropString extends DefaultFTProp {
 	JTextField tf;
 	public FTPropString(FileTest ft, String name, String shortname, String description, Object def) {
-		super(ft, shortname, name, description, def);
+		super(ft, name, shortname, description, def);
 		init();
 		tf = new JTextField(this.def.toString());
 		tf.getDocument().addDocumentListener(new DocumentListener(){
