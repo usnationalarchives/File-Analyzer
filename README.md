@@ -1,11 +1,6 @@
 NARA File Analyzer and Metadata Harvester
 ==
 
-Overview
---
-
-### DESCRIPTION ###
- 
 The NARA File Analyzer Tool walks a directory tree and performs a "File Test"
 on each file that is encountered.  The application framework allows new File
 Tests to be quickly developed and deployed into the application.  The results
@@ -32,7 +27,7 @@ version of the application allows the results of multiple executions to be
 merged.  The merged information can be filtered to display matching values
 and mismatched values.
 	 
-### BENEFITS ###
+## Benefits
 	  
 The NARA File Analyzer automates a number of simple tasks that would be
 tedious to perform either manually or with other COTS applications. 
@@ -44,7 +39,25 @@ Note: NARA has also deployed a customized version of this application
 that performs file tests that implement custom business rules such as
 file name validation and metadata introspection.  
 	    
-### DEPLOYMENT ###
+## Public Domain
+
+This project is in the public domain within the United States, and
+copyright and related rights in the work worldwide are waived through
+the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
+
+All contributions to this project will be released under the CC0 dedication. By submitting a pull request, you are agreeing to comply with this waiver of copyright interest
+
+For more information, see [license](https://github.com/usnationalarchives/File-Analyzer/blob/master/LICENSE.md).
+
+## Privacy
+
+All comments, messages, pull requests, and other submissions received through official NARA pages including this GitHub page may be subject to archiving requirements. See the [Privacy Statement](http://www.archives.gov/global-pages/privacy.html) for more information.
+
+## Contributions
+
+We welcome contributions. If you would like to contribute to the project you can do so by forking the repository and submitting your changes in a pull request. You can submit issues using [GitHub Issues](https://github.com/usnationalarchives/File-Analyzer/issues).
+
+## Deployment
 		 
 The basic File Analyzer application is deployed as a self-extracting
 jar file.  The application requires Java SE 1.6 or higher to be present
