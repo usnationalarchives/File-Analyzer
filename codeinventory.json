@@ -1,0 +1,16 @@
+﻿{
+  "name": "NARA File Analyzer and Metadata Harvester",
+  "description": "Software to walk a directory tree and perform a \"File Test\" on each file that is encountered. The application framework allows new File Tests to be quickly developed and deployed into the application. The results of each File Test are compiled into a table that summarizes the results of the analysis.",
+  "license": "https://github.com/usnationalarchives/File-Analyzer/commit/7c2aefc27dec2ab9c2f49d644c4b55cbe67657ab",
+  "openSourceProject": 1,
+  "governmentWideReuseProject": 1,
+  "tags": [
+    "NARA",
+    "FileTest",
+    ""Java",
+    Metadata"
+  ],
+  "contact": {
+    "email": "leslie.johnston@nara.gov"
+  }
+}
